@@ -26,15 +26,21 @@ churn-prediction-mlops-azure/
 ## 🔄 End-to-End Architecture
 ```mermaid
 graph TD
-    A[Raw Data: Telco-Customer-Churn.csv] --> B[train_model.py: Preprocess & Train Model]
-    B --> C[model.pkl Saved to src/inference/]
-    C --> D[app.py: FastAPI Web Server]
-    D --> E[Azure Container Instance: Dockerized FastAPI API]
-    E --> F[Public Prediction Endpoint]
+    A[Raw Data: Telco-Customer-Churn.csv]
+    B[train_model.py: Preprocess & Train Model]
+    C[model.pkl saved to src/inference/]
+    D[app.py: FastAPI Web Server]
+    E[Azure Container Instance: Dockerized FastAPI API]
+    F[Public Prediction Endpoint]
+    G[Gradio UI (gradio_ui.py)]
 
-    G[Gradio UI (gradio_ui.py)] -->|Sends input| F
-    F -->|Receives prediction| G
-```
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    G --> F
+    F --> G
 
 ---
 
