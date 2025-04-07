@@ -1,0 +1,18 @@
+@startuml Sequence_Diagram
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(user, "User", "Uses UI to predict churn")
+Container(ui, "Gradio UI", "Python", "Frontend that collects input")
+Container(api, "FastAPI API", "Python", "API endpoint for inference")
+Container(model, "Trained ML Model", "Joblib", "Serialized churn model")
+
+user -> ui : Input features
+ui -> api : POST /predict
+api -> model : Load model.pkl
+api -> model : Run prediction
+model --> api : Return result
+api --> ui : Return prediction
+ui --> user : Show result
+@enduml

@@ -1,0 +1,20 @@
+@startuml Container_Diagram
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(user, "User", "Interacts with the churn prediction system")
+System_Boundary(system, "Churn Prediction Platform") {
+  Container(ui, "Gradio UI", "Python", "Collects user input and displays churn prediction")
+  Container(api, "FastAPI App", "Python", "Processes prediction requests via HTTP API")
+  Container(model, "ML Model (model.pkl)", "Joblib", "Serialized logistic regression model")
+  Container(train, "Model Trainer (train_model.py)", "Python", "Reads CSV and trains model")
+  Container(data, "Telco Dataset", "CSV", "Source data used for training")
+}
+
+Rel(user, ui, "Enters input features")
+Rel(ui, api, "Sends prediction requests")
+Rel(api, model, "Loads model and returns prediction")
+Rel(train, data, "Reads data for training")
+Rel(train, model, "Trains and saves model")
+@enduml

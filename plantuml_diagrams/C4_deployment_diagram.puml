@@ -1,0 +1,29 @@
+@startuml Deployment_Diagram
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Deployment.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(user, "User", "Accesses the prediction platform via Gradio")
+
+Deployment_Node(browser, "Web Browser") {
+  Container(gradio, "Gradio UI", "Python", "Runs locally or on a host, captures user input")
+}
+
+Deployment_Node(aci, "Azure Cloud", "westeurope") {
+  Deployment_Node(container, "Azure Container Instance") {
+    Container(fastapi, "FastAPI App", "Python", "Serves predictions via /predict endpoint")
+    Container(model, "Trained Model (model.pkl)", "Joblib", "Serialized churn model loaded at runtime")
+  }
+}
+
+Deployment_Node(dev, "Developer Machine") {
+  Container(train_script, "Model Training Script (train_model.py)", "Python", "Trains model using CSV")
+  Container(csv, "Churn Dataset (Telco-Customer-Churn.csv)", "CSV", "Input dataset")
+}
+
+Rel(user, gradio, "Inputs features")
+Rel(gradio, fastapi, "Sends HTTP POST to /predict")
+Rel(fastapi, model, "Loads & applies model")
+Rel(train_script, csv, "Reads raw data")
+Rel(train_script, model, "Trains and saves model")
+@enduml

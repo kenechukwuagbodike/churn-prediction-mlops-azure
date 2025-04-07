@@ -1,0 +1,14 @@
+@startuml System_Context
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(user, "User", "Uses the churn prediction platform via a web-based UI")
+System(churnSystem, "Churn Prediction Platform", "Python/ML", "Predicts customer churn using ML model hosted on Azure")
+System_Ext(github, "GitHub", "Code repository")
+System_Ext(azure, "Azure Cloud", "Hosts API containers")
+
+Rel(user, churnSystem, "Submits customer info and receives churn prediction")
+Rel(churnSystem, github, "Pulls/pushes source & CI/CD")
+Rel(churnSystem, azure, "Deploys model API in containers")
+@enduml

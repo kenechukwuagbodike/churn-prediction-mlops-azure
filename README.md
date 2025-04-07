@@ -23,24 +23,19 @@ churn-prediction-mlops-azure/
 
 ---
 
-## 🔄 End-to-End Architecture
-```mermaid
-graph TD
-    A[Raw Data: Telco-Customer-Churn.csv]
-    B[train_model.py: Preprocess & Train Model]
-    C[model.pkl saved to src/inference/]
-    D[app.py: FastAPI Web Server]
-    E[Azure Container Instance: Dockerized FastAPI API]
-    F[Public Prediction Endpoint]
-    G[Gradio UI (gradio_ui.py)]
+## 🧱 Architecture Overview (C4 Model)
 
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-    E --> F
-    G --> F
-    F --> G
+### 1. System Context
+![System Context](out\plantuml_diagrams\C4_system_context_diagram\System_Context.png)
+
+### 2. Container Diagram
+![Container Diagram](out\plantuml_diagrams\C4_container_diagram\Container_Diagram.png)
+
+### 3. Deployment Diagram
+![Deployment Diagram](out\plantuml_diagrams\C4_deployment_diagram\Deployment_Diagram.png)
+
+### 4. Sequence Flow
+![Sequence Diagram](out\plantuml_diagrams\C4_sequence_diagram\Sequence_Diagram.png)
 
 ---
 

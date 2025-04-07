@@ -1,0 +1,29 @@
+@startuml C4_Sequence_Diagram
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Deployment.puml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+'title End-to-End Churn Prediction - C4 Sequence Flow
+
+Person(user, "User")
+Container(ui, "Gradio UI (gradio_ui.py)", "Python", "User-friendly frontend for inputting customer features")
+Container(endpoint, "Public Prediction Endpoint", "REST", "Public URL for model prediction")
+Container(container, "Azure Container Instance", "Docker", "Hosts the FastAPI app")
+Container(api, "FastAPI App (app.py)", "Python", "Processes JSON and invokes model")
+Container(model, "Saved Model (model.pkl)", "Joblib", "Trained churn prediction model")
+Container(train, "Training Script (train_model.py)", "Python", "Loads data, trains model, and saves it")
+Container(data, "Telco Dataset (CSV)", "CSV File", "Raw customer churn dataset")
+
+Rel(user, ui, "Enters input features")
+Rel(ui, endpoint, "Sends JSON")
+Rel(endpoint, container, "Routes request")
+Rel(container, api, "Executes API logic")
+Rel(api, model, "Loads model")
+Rel(api, model, "Predicts churn")
+Rel(api, endpoint, "Returns prediction")
+Rel(endpoint, ui, "Displays result")
+
+Rel(train, data, "Loads dataset")
+Rel(train, model, "Trains & saves model")
+
+@enduml

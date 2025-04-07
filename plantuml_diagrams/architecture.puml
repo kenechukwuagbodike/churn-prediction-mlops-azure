@@ -1,5 +1,5 @@
 @startuml End-to-End-Churn-Prediction
-title End-to-End Churn Prediction Architecture
+title End-to-End Churn Prediction Sequence Flow Diagram
 
 actor User
 
