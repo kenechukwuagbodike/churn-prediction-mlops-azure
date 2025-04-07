@@ -21,24 +21,6 @@ churn-prediction-mlops-azure/
 ├── README.md
 ```
 
----
-
-## 🧱 Architecture Overview (C4 Model)
-
-### 1. System Context
-![System Context](out\plantuml_diagrams\C4_system_context_diagram\System_Context.png)
-
-### 2. Container Diagram
-![Container Diagram](out\plantuml_diagrams\C4_container_diagram\Container_Diagram.png)
-
-### 3. Deployment Diagram
-![Deployment Diagram](out\plantuml_diagrams\C4_deployment_diagram\Deployment_Diagram.png)
-
-### 4. Sequence Flow
-![Sequence Diagram](out\plantuml_diagrams\C4_sequence_diagram\Sequence_Diagram.png)
-
----
-
 ## What This Project Demonstrates
 
 - ✅ Data preprocessing and encoding (LabelEncoder, NaNs, type casting)
@@ -52,6 +34,21 @@ churn-prediction-mlops-azure/
 
 ---
 
+## 🧱 Architecture Overview (C4 Model)
+
+### 1. System Context
+![System Context](out/plantuml_diagrams/C4_system_context_diagram/System_Context.png)
+
+### 2. Container Diagram
+![Container Diagram](out/plantuml_diagrams/C4_container_diagram/Container_Diagram.png)
+
+### 3. Deployment Diagram
+![Deployment Diagram](out/plantuml_diagrams/C4_deployment_diagram/Deployment_Diagram.png)
+
+### 4. Sequence Flow
+![Sequence Diagram](out/plantuml_diagrams/C4_sequence_diagram/Sequence_Diagram.png)
+
+---
 ## Live Demo
 👉 API Docs: `http://churnapi21017.westeurope.azurecontainer.io/docs`  
 👉 Gradio UI: `http://localhost:7860` *(or hosted Gradio link if deployed)*
