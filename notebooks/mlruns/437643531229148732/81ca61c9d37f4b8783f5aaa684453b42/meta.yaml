@@ -1,0 +1,15 @@
+artifact_uri: file:///c:/Users/kenec/OneDrive/Documents/GitHub/churn-prediction-mlops-azure/notebooks/mlruns/437643531229148732/81ca61c9d37f4b8783f5aaa684453b42/artifacts
+end_time: 1743944606824
+entry_point_name: ''
+experiment_id: '437643531229148732'
+lifecycle_stage: active
+run_id: 81ca61c9d37f4b8783f5aaa684453b42
+run_name: secretive-moth-691
+run_uuid: 81ca61c9d37f4b8783f5aaa684453b42
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1743944601509
+status: 3
+tags: []
+user_id: kenec

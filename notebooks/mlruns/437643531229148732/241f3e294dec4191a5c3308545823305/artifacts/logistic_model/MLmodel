@@ -1,0 +1,46 @@
+artifact_path: logistic_model
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.12.3
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.6.0
+is_signature_from_type_hint: false
+mlflow_version: 2.21.2
+model_size_bytes: 2397
+model_uuid: d43a9a9b4e4f4a8ba2a1effb24ec94e9
+prompts: null
+run_id: 241f3e294dec4191a5c3308545823305
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_example.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "integer", "name": "gender", "required": true}, {"type": "long",
+    "name": "SeniorCitizen", "required": true}, {"type": "integer", "name": "Partner",
+    "required": true}, {"type": "integer", "name": "Dependents", "required": true},
+    {"type": "long", "name": "tenure", "required": true}, {"type": "integer", "name":
+    "PhoneService", "required": true}, {"type": "integer", "name": "MultipleLines",
+    "required": true}, {"type": "integer", "name": "InternetService", "required":
+    true}, {"type": "integer", "name": "OnlineSecurity", "required": true}, {"type":
+    "integer", "name": "OnlineBackup", "required": true}, {"type": "integer", "name":
+    "DeviceProtection", "required": true}, {"type": "integer", "name": "TechSupport",
+    "required": true}, {"type": "integer", "name": "StreamingTV", "required": true},
+    {"type": "integer", "name": "StreamingMovies", "required": true}, {"type": "integer",
+    "name": "Contract", "required": true}, {"type": "integer", "name": "PaperlessBilling",
+    "required": true}, {"type": "integer", "name": "PaymentMethod", "required": true},
+    {"type": "double", "name": "MonthlyCharges", "required": true}, {"type": "double",
+    "name": "TotalCharges", "required": true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "int64", "shape": [-1]}}]'
+  params: null
+type_hint_from_example: false
+utc_time_created: '2025-04-06 13:06:12.363852'

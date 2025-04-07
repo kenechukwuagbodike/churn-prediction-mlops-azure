@@ -1,0 +1,15 @@
+artifact_uri: file:///C:/Users/kenec/OneDrive/Documents/GitHub/churn-prediction-mlops-azure/mlruns/148255750506311876/4c6a9e0ccd17458a9ffadc0647c12b9d/artifacts
+end_time: 1743944995407
+entry_point_name: ''
+experiment_id: '148255750506311876'
+lifecycle_stage: active
+run_id: 4c6a9e0ccd17458a9ffadc0647c12b9d
+run_name: ambitious-slug-345
+run_uuid: 4c6a9e0ccd17458a9ffadc0647c12b9d
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1743944987136
+status: 3
+tags: []
+user_id: kenec

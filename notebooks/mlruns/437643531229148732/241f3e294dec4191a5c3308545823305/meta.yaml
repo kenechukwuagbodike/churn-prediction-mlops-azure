@@ -1,0 +1,15 @@
+artifact_uri: file:///c:/Users/kenec/OneDrive/Documents/GitHub/churn-prediction-mlops-azure/notebooks/mlruns/437643531229148732/241f3e294dec4191a5c3308545823305/artifacts
+end_time: null
+entry_point_name: ''
+experiment_id: '437643531229148732'
+lifecycle_stage: active
+run_id: 241f3e294dec4191a5c3308545823305
+run_name: adventurous-vole-733
+run_uuid: 241f3e294dec4191a5c3308545823305
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1743944772264
+status: 1
+tags: []
+user_id: kenec
