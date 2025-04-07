@@ -1,0 +1,46 @@
+@startuml End-to-End-Churn-Prediction
+title End-to-End Churn Prediction Architecture
+
+actor User
+
+box "Frontend"
+  participant "Gradio UI\n(gradio_ui.py)" as G
+end box
+
+box "API Layer"
+  participant "Public Endpoint" as F
+  participant "Azure Container\n(FastAPI Docker)" as E
+  participant "FastAPI App\n(app.py)" as D
+end box
+
+box "Model Layer"
+  participant "Saved Model\n(model.pkl)" as C
+end box
+
+box "Training Pipeline"
+  participant "Training Script\n(train_model.py)" as B
+end box
+
+box "Data Layer"
+  participant "Raw Dataset\n(Telco-Churn.csv)" as A
+end box
+
+User -> G : Inputs Features  
+G -> F : Sends JSON  
+F -> E  
+E -> D  
+activate D
+D -> C : Load model  
+activate C
+C --> D  
+deactivate C
+D -> D : Predict  
+D --> F : Prediction  
+deactivate D
+F --> G : Prediction  
+G --> User : Display Result
+
+== Training Flow ==
+
+B -> A : Load dataset  
+B -> C : Train & Save model
