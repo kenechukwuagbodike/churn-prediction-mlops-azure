@@ -38,7 +38,7 @@ graph TD
 
 ---
 
-## 🚀 What This Project Demonstrates
+## What This Project Demonstrates
 
 - ✅ Data preprocessing and encoding (LabelEncoder, NaNs, type casting)
 - ✅ Logistic Regression model training and evaluation
@@ -51,14 +51,14 @@ graph TD
 
 ---
 
-## 📡 Live Demo
-👉 API Docs: `http://<your-azure-api-url>/docs`  
+## Live Demo
+👉 API Docs: `http://churnapi21017.westeurope.azurecontainer.io/docs`  
 👉 Gradio UI: `http://localhost:7860` *(or hosted Gradio link if deployed)*
 
 ---
 
 ## 🛠 Tech Stack
-- Python 3.9
+- Python 3.12
 - scikit-learn, pandas, joblib
 - FastAPI, Uvicorn
 - Docker
@@ -67,7 +67,7 @@ graph TD
 
 ---
 
-## 📌 How to Run
+## How to Run
 1. `python -m venv venv && source venv/bin/activate`  
 2. `pip install -r requirements.txt`
 3. `python src/train_model.py`
@@ -76,7 +76,7 @@ graph TD
 
 ---
 
-## 💡 Next Steps
+## Next Steps
 - Add Streamlit dashboard (or deploy Gradio UI)
 - Implement CI/CD via GitHub Actions
 - Expand to multi-model registry with MLflow
@@ -84,6 +84,6 @@ graph TD
 
 ---
 
-## 🙌 Author
+## Author
 **Kene Agbodike**  
 _Data & AI | ML Engineering | MLOps | Cloud Deployment_
