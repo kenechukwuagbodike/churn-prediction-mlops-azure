@@ -26,7 +26,7 @@ churn-prediction-mlops-azure/
 ## 🧱 Architecture Overview (C4 Model)
 
 ### 1. System Context
-![System Context] (out\plantuml_diagrams\C4_system_context_diagram\System_Context.png)
+![System Context](out\plantuml_diagrams\C4_system_context_diagram\System_Context.png)
 
 ### 2. Container Diagram
 ![Container Diagram](out\plantuml_diagrams\C4_container_diagram\Container_Diagram.png)
