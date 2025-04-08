@@ -1,67 +1,92 @@
 import gradio as gr
 import requests
-from collections import OrderedDict
 
-API_URL = "http://churnapi21017.westeurope.azurecontainer.io:8000/predict"
+# Use container service name instead of localhost
+API_URL = "http://churn-fastapi:8080/predict"
 
 def predict_churn(
-    SeniorCitizen, tenure, MonthlyCharges, TotalCharges, gender, Partner, Dependents,
-    PhoneService, MultipleLines, InternetService, OnlineSecurity, OnlineBackup,
-    DeviceProtection, TechSupport, StreamingTV, StreamingMovies, Contract,
-    PaperlessBilling, PaymentMethod
+    SeniorCitizen: int,
+    tenure: int,
+    MonthlyCharges: float,
+    TotalCharges: float,
+    gender: str,
+    Partner: str,
+    Dependents: str,
+    PhoneService: str,
+    MultipleLines: str,
+    InternetService: str,
+    OnlineSecurity: str,
+    OnlineBackup: str,
+    DeviceProtection: str,
+    TechSupport: str,
+    StreamingTV: str,
+    StreamingMovies: str,
+    Contract: str,
+    PaperlessBilling: str,
+    PaymentMethod: str
 ):
-    payload = OrderedDict([
-        ("SeniorCitizen", SeniorCitizen),
-        ("tenure", tenure),
-        ("MonthlyCharges", MonthlyCharges),
-        ("TotalCharges", TotalCharges),
-        ("gender", gender),
-        ("Partner", Partner),
-        ("Dependents", Dependents),
-        ("PhoneService", PhoneService),
-        ("MultipleLines", MultipleLines),
-        ("InternetService", InternetService),
-        ("OnlineSecurity", OnlineSecurity),
-        ("OnlineBackup", OnlineBackup),
-        ("DeviceProtection", DeviceProtection),
-        ("TechSupport", TechSupport),
-        ("StreamingTV", StreamingTV),
-        ("StreamingMovies", StreamingMovies),
-        ("Contract", Contract),
-        ("PaperlessBilling", PaperlessBilling),
-        ("PaymentMethod", PaymentMethod)
-    ])
+    payload = [{
+        "SeniorCitizen": SeniorCitizen,
+        "tenure": tenure,
+        "MonthlyCharges": MonthlyCharges,
+        "TotalCharges": TotalCharges,
+        "gender": gender,
+        "Partner": Partner,
+        "Dependents": Dependents,
+        "PhoneService": PhoneService,
+        "MultipleLines": MultipleLines,
+        "InternetService": InternetService,
+        "OnlineSecurity": OnlineSecurity,
+        "OnlineBackup": OnlineBackup,
+        "DeviceProtection": DeviceProtection,
+        "TechSupport": TechSupport,
+        "StreamingTV": StreamingTV,
+        "StreamingMovies": StreamingMovies,
+        "Contract": Contract,
+        "PaperlessBilling": PaperlessBilling,
+        "PaymentMethod": PaymentMethod
+    }]
 
-    response = requests.post(API_URL, json=payload)
-    return response.json()
+    try:
+        response = requests.post(API_URL, json=payload)
+        if response.status_code == 200:
+            return f"Prediction: {response.json()['predictions'][0]}"
+        else:
+            return f"Error: {response.text}"
+    except Exception as e:
+        return f"Error: {str(e)}"
 
-# Build UI
-demo = gr.Interface(
+# Define inputs with validation
+inputs = [
+    gr.Dropdown([0, 1], label="Senior Citizen (0=No, 1=Yes)", type="index"),
+    gr.Number(label="Tenure (months)", minimum=0, maximum=100, step=1),
+    gr.Number(label="Monthly Charges ($)", minimum=0, maximum=200, step=1),
+    gr.Number(label="Total Charges ($)", minimum=0, maximum=10000, step=1),
+    gr.Dropdown(["Male", "Female"], label="Gender"),
+    gr.Dropdown(["Yes", "No"], label="Partner"),
+    gr.Dropdown(["Yes", "No"], label="Dependents"),
+    gr.Dropdown(["Yes", "No"], label="Phone Service"),
+    gr.Dropdown(["Yes", "No", "No phone service"], label="Multiple Lines"),
+    gr.Dropdown(["DSL", "Fiber optic", "No"], label="Internet Service"),
+    gr.Dropdown(["Yes", "No", "No internet service"], label="Online Security"),
+    gr.Dropdown(["Yes", "No", "No internet service"], label="Online Backup"),
+    gr.Dropdown(["Yes", "No", "No internet service"], label="Device Protection"),
+    gr.Dropdown(["Yes", "No", "No internet service"], label="Tech Support"),
+    gr.Dropdown(["Yes", "No", "No internet service"], label="Streaming TV"),
+    gr.Dropdown(["Yes", "No", "No internet service"], label="Streaming Movies"),
+    gr.Dropdown(["Month-to-month", "One year", "Two year"], label="Contract"),
+    gr.Dropdown(["Yes", "No"], label="Paperless Billing"),
+    gr.Dropdown(
+        ["Electronic check", "Mailed check", "Bank transfer (automatic)", "Credit card (automatic)"],
+        label="Payment Method"
+    )
+]
+
+gr.Interface(
     fn=predict_churn,
-    inputs=[
-        gr.Radio([0, 1], label="SeniorCitizen"),
-        gr.Slider(0, 72, step=1, label="tenure"),
-        gr.Number(label="MonthlyCharges"),
-        gr.Number(label="TotalCharges"),
-        gr.Radio([0, 1], label="gender"),
-        gr.Radio([0, 1], label="Partner"),
-        gr.Radio([0, 1], label="Dependents"),
-        gr.Radio([0, 1], label="PhoneService"),
-        gr.Radio([0, 1], label="MultipleLines"),
-        gr.Dropdown([0, 1, 2], label="InternetService"),
-        gr.Radio([0, 1], label="OnlineSecurity"),
-        gr.Radio([0, 1], label="OnlineBackup"),
-        gr.Radio([0, 1], label="DeviceProtection"),
-        gr.Radio([0, 1], label="TechSupport"),
-        gr.Radio([0, 1], label="StreamingTV"),
-        gr.Radio([0, 1], label="StreamingMovies"),
-        gr.Dropdown([0, 1, 2], label="Contract"),
-        gr.Radio([0, 1], label="PaperlessBilling"),
-        gr.Dropdown([0, 1, 2, 3], label="PaymentMethod")
-    ],
-    outputs="json",
-    title="Churn Prediction App",
-    description="Enter customer features to get churn prediction from your live Azure-hosted model!"
-)
-
-demo.launch()
+    inputs=inputs,
+    outputs="text",
+    title="Customer Churn Predictor",
+    description="Enter customer details to predict churn risk",
+    allow_flagging="never"
+).launch()

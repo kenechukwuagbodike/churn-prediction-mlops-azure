@@ -1,4 +1,6 @@
 # 🧠 Customer Churn Prediction (End-to-End ML Deployment)
+[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.WebSite)
+
 
 This project demonstrates a full MLOps workflow for predicting customer churn using logistic regression, with a production-ready API deployed to Azure and a live Gradio UI.
 
@@ -8,33 +10,34 @@ This project demonstrates a full MLOps workflow for predicting customer churn us
 ```
 churn-prediction-mlops-azure/
 ├── data/                   # Telco churn dataset
-├── docker/                 # Dockerfile for FastAPI app
+├── docker/                 # Dockerfile for FastAPI + Gradio
 ├── notebooks/              # EDA, preprocessing notebooks
 ├── src/
-│   ├── train_model.py      # Train + save model
+│   ├── train_model.py      # Train + save pipeline
 │   ├── inference/
 │   │   ├── app.py          # FastAPI server
-│   │   └── model.pkl       # Saved model
+│   │   └── pipeline.pkl    # Saved ML pipeline
 │   └── ui/
-│       └── gradio_ui.py    # Gradio app for user input
+│       └── gradio_ui.py    # Gradio app for testing
 ├── requirements.txt
+├── docker-compose.yml      # Run both FastAPI + Gradio locally
 ├── README.md
 ```
 
 ## What This Project Demonstrates
 
-- ✅ Data preprocessing and encoding (LabelEncoder, NaNs, type casting)
-- ✅ Logistic Regression model training and evaluation
+- ✅ Data preprocessing and encoding (ColumnTransformer, NaNs, one-hot encoding)
+- ✅ Logistic Regression model with pipeline encapsulation
 - ✅ MLflow tracking (metrics, parameters, artifacts)
-- ✅ Saving model to disk (`joblib`)
+- ✅ Model saved and reused via `joblib`
 - ✅ Serving predictions via FastAPI
-- ✅ Containerization with Docker
-- ✅ Deployment to Azure Container Instances
-- ✅ Live UI via Gradio connected to the Azure API
+- ✅ Live Gradio UI for manual testing
+- ✅ Dockerized with one Dockerfile, multi-service Compose
+- ✅ Deployed to Azure Web App for Containers / Azure Container Instances
 
 ---
 
-## 🧱 Architecture Overview (C4 Model)
+## 🛠 Architecture Overview (C4 Model)
 
 ### 1. System Context
 ![System Context](out/plantuml_diagrams/C4_system_context_diagram/System_Context.png)
@@ -49,7 +52,7 @@ churn-prediction-mlops-azure/
 ![Sequence Diagram](out/plantuml_diagrams/C4_sequence_diagram/Sequence_Diagram.png)
 
 ---
-## Live Demo
+## 🚀 Live Demo
 👉 API Docs: `http://churnapi21017.westeurope.azurecontainer.io/docs`  
 👉 Gradio UI: `http://localhost:7860` *(or hosted Gradio link if deployed)*
 
@@ -59,26 +62,50 @@ churn-prediction-mlops-azure/
 - Python 3.12
 - scikit-learn, pandas, joblib
 - FastAPI, Uvicorn
-- Docker
-- Azure CLI + Azure Container Instances
+- Docker, Docker Compose
+- Azure CLI + Azure Web App for Containers
 - Gradio (UI layer)
 
 ---
 
-## How to Run
-1. `python -m venv venv && source venv/bin/activate`  
-2. `pip install -r requirements.txt`
-3. `python src/train_model.py`
-4. `uvicorn src.inference.app:app --reload`
-5. `python src/ui/gradio_ui.py`
+## ✨ How to Run Locally (via Docker Compose)
+```bash
+git clone https://github.com/<your-username>/churn-prediction-mlops-azure.git
+cd churn-prediction-mlops-azure
+
+# Build and run both FastAPI + Gradio
+docker compose up --build
+```
+
+- Visit `http://localhost:8000/docs` for API
+- Visit `http://localhost:7860` for Gradio UI
+
+---
+
+## 🚤 Deploy to Azure
+
+1. Push Docker image to DockerHub:
+```bash
+docker build -t yourusername/churn-api:latest .
+docker push yourusername/churn-api:latest
+```
+
+2. Deploy to Azure Web App:
+```bash
+az login
+az group create --name churn-ml-rg --location westeurope
+az appservice plan create --name churn-plan --resource-group churn-ml-rg --is-linux --sku B1
+az webapp create --resource-group churn-ml-rg --plan churn-plan \
+  --name churn-api-app --deployment-container-image-name yourusername/churn-api:latest
+```
 
 ---
 
 ## Next Steps
-- Add Streamlit dashboard (or deploy Gradio UI)
+- Add Streamlit dashboard (or host Gradio)
 - Implement CI/CD via GitHub Actions
-- Expand to multi-model registry with MLflow
-- Add frontend for business reporting
+- Expose model version via metadata endpoint
+- Auto-tag and push Docker builds via GitHub Workflow
 
 ---
 

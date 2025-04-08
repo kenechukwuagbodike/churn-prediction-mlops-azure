@@ -2,57 +2,78 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import joblib
 import pandas as pd
-import os
+from enum import Enum
 
 app = FastAPI()
+pipeline = joblib.load("src/inference/pipeline.pkl")
 
-# Automatically resolve the directory the script is in
-base_dir = os.path.dirname(__file__)
-model_path = os.path.join(base_dir, "model.pkl")
+# Enums for categorical validation
+class YesNo(str, Enum):
+    yes = "Yes"
+    no = "No"
 
-model = joblib.load(model_path)
+class YesNoService(str, Enum):
+    Yes = "Yes"
+    No = "No"
+    NoService = "No internet service"
 
-# Define expected input
+class Gender(str, Enum):
+    male = "Male"
+    female = "Female"
+
+class InternetService(str, Enum):
+    dsl = "DSL"
+    fiber = "Fiber optic"
+    no = "No"
+
+class Contract(str, Enum):
+    monthly = "Month-to-month"
+    one_year = "One year"
+    two_year = "Two year"
+
+class PaymentMethod(str, Enum):
+    electronic = "Electronic check"
+    mailed = "Mailed check"
+    transfer = "Bank transfer (automatic)"
+    credit = "Credit card (automatic)"
+
 class ChurnInput(BaseModel):
     SeniorCitizen: int
     tenure: int
     MonthlyCharges: float
     TotalCharges: float
-    gender: int
-    Partner: int
-    Dependents: int
-    PhoneService: int
-    MultipleLines: int
-    InternetService: int
-    OnlineSecurity: int
-    OnlineBackup: int
-    DeviceProtection: int
-    TechSupport: int
-    StreamingTV: int
-    StreamingMovies: int
-    Contract: int
-    PaperlessBilling: int
-    PaymentMethod: int
+    gender: Gender
+    Partner: YesNo
+    Dependents: YesNo
+    PhoneService: YesNo
+    MultipleLines: YesNoService
+    InternetService: InternetService
+    OnlineSecurity: YesNoService
+    OnlineBackup: YesNoService
+    DeviceProtection: YesNoService
+    TechSupport: YesNoService
+    StreamingTV: YesNoService
+    StreamingMovies: YesNoService
+    Contract: Contract
+    PaperlessBilling: YesNo
+    PaymentMethod: PaymentMethod
 
 @app.post("/predict")
-def predict_churn(data: ChurnInput):
+async def predict(input_data: list[ChurnInput]):
     try:
-        input_df = pd.DataFrame([data.dict()])
-
-        # Enforce correct feature order
-        model_features = [
-            'SeniorCitizen', 'tenure', 'MonthlyCharges', 'TotalCharges', 'gender',
-            'Partner', 'Dependents', 'PhoneService', 'MultipleLines', 'InternetService',
-            'OnlineSecurity', 'OnlineBackup', 'DeviceProtection', 'TechSupport',
-            'StreamingTV', 'StreamingMovies', 'Contract', 'PaperlessBilling',
-            'PaymentMethod'
-        ]
-
-        input_df = input_df[model_features]
+        # Convert input to DataFrame
+        df = pd.DataFrame([item.dict() for item in input_data])
         
-
-        pred = model.predict(input_df)[0]
-        return {"churn_prediction": int(pred)}
+        # Get predictions
+        predictions = pipeline.predict(df).tolist()
+        
+        # Convert to human-readable labels
+        churn_labels = [
+            "No Churn" if pred == 0 else "Churn"
+            for pred in predictions
+        ]
+        
+        return {"predictions": churn_labels}
+        
     except Exception as e:
         return {"error": str(e)}
-

@@ -1,19 +1,27 @@
-# Use lightweight Python base
-FROM python:3.9-slim
+# Use official Python slim image
+FROM python:3.10-slim
 
-# Set working directory
+# Set working directory inside the container
 WORKDIR /app
 
-# Copy requirements file and install dependencies
-COPY ../requirements.txt .
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy and install Python dependencies
+COPY ./requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
-# Copy the API code and model into the container
-COPY ../src/inference ./inference
+# Copy source code (only needed for docker build context; compose volumes override this)
+COPY ./src /app/src
 
-# Expose the API port
+# Set environment variable
+ENV PYTHONUNBUFFERED=1
+
+# Expose ports (optional; Compose already handles it)
 EXPOSE 8000
+EXPOSE 7860
 
-# Run the FastAPI app
-CMD ["uvicorn", "inference.app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Default command (overridden by Compose)
+CMD ["uvicorn", "src.inference.app:app", "--host", "0.0.0.0", "--port", "8000"]
