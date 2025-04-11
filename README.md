@@ -23,20 +23,21 @@ Think of it as your own AI assistant for customer retention.
 
 ## 🗂 Project Structure
 ```
-churn-prediction-mlops-azure/
-├── data/                   # Telco churn dataset
-├── docker/                 # Dockerfile for FastAPI + Gradio
-├── notebooks/              # EDA, preprocessing notebooks
+├── data/                       # Dataset
+├── notebooks/                 # Data cleaning, EDA notebooks
 ├── src/
-│   ├── train_model.py      # Train + save pipeline
 │   ├── inference/
-│   │   ├── app.py          # FastAPI server
-│   │   └── pipeline.pkl    # Saved ML pipeline
-│   └── ui/
-│       └── gradio_ui.py    # Gradio app for testing
-├── requirements.txt
-├── docker-compose.yml      # Run both FastAPI + Gradio locally
-├── README.md
+│   │   ├── app.py             # FastAPI application
+│   │   ├── model.pkl          # Trained model
+│   │   └── pipeline.pkl       # Sklearn pipeline
+│   ├── train_model.py         # Training script
+│   └── __init__.py
+├── ui/
+│   └── gradio_ui.py           # Gradio application
+├── docker/
+│   └── Dockerfile             # Base Dockerfile
+├── Docker-compose.yml         # Compose file for local multi-container setup
+├── requirements.txt           # Project dependencies
 ```
 
 ## What This Project Demonstrates
@@ -99,28 +100,60 @@ docker compose up --build
 
 ## 🚤 Deploy to Azure
 
-1. Push Docker image to DockerHub:
+1. Step 1: Tag & Push Images to Azure Container Registry (ACR)
 ```bash
-docker build -t yourusername/churn-api:latest .
-docker push yourusername/churn-api:latest
+az acr login --name churnmlacr
+
+# Tag your images correctly
+# Replace with your actual local image names from `docker images`
+docker tag churn-prediction-mlops-azure-churn-fastapi churnmlacr.azurecr.io/churn-fastapi:latest
+docker tag churn-prediction-mlops-azure-churn-gradio churnmlacr.azurecr.io/churn-gradio:latest
+
+# Push to ACR
+docker push churnmlacr.azurecr.io/churn-fastapi:latest
+docker push churnmlacr.azurecr.io/churn-gradio:latest
 ```
 
-2. Deploy to Azure Web App:
+2. Step 2: Deploy to Azure Container Instances (ACI)
 ```bash
-az login
-az group create --name churn-ml-rg --location westeurope
-az appservice plan create --name churn-plan --resource-group churn-ml-rg --is-linux --sku B1
-az webapp create --resource-group churn-ml-rg --plan churn-plan \
-  --name churn-api-app --deployment-container-image-name yourusername/churn-api:latest
+# Deploy FastAPI
+az container create \
+  --resource-group churnmlrg \
+  --name churn-fastapi \
+  --image churnmlacr.azurecr.io/churn-fastapi:latest \
+  --registry-login-server churnmlacr.azurecr.io \
+  --registry-username churnmlacr \
+  --registry-password <your-password> \
+  --cpu 1 --memory 1.5 \
+  --dns-name-label churn-fastapi-kene \
+  --ports 8000 --os-type Linux
+
+# Deploy Gradio
+az container create \
+  --resource-group churnmlrg \
+  --name churn-gradio \
+  --image churnmlacr.azurecr.io/churn-gradio:latest \
+  --registry-login-server churnmlacr.azurecr.io \
+  --registry-username churnmlacr \
+  --registry-password <your-password> \
+  --cpu 1 --memory 1.5 \
+  --dns-name-label churn-gradio-kene \
+  --ports 7860 \
+  --os-type Linux \
+  --environment-variables ENV_MODE=cloud
 ```
+🔁 When deploying Gradio, make sure the gradio_ui.py file uses the FastAPI container's full Azure FQDN in url = "FQDN:8000/predict"
+
+### Final State
+![Frontend Diagram](/frontend.png)
 
 ---
 
 ## Next Steps
-- Add Streamlit dashboard (or host Gradio)
 - Implement CI/CD via GitHub Actions
-- Expose model version via metadata endpoint
-- Auto-tag and push Docker builds via GitHub Workflow
+- Auto-deploy to Azure on push
+- Add model monitoring and metadata
+- expand to Streamlit or frontend dashboard for BI teams
 
 ---
 

@@ -20,6 +20,8 @@ services:
     container_name: churn-gradio
     ports:
       - "7860:7860"
+    environment:
+      - ENV_MODE=docker  # <<< THIS IS IMPORTANT
     command: ["python", "src/ui/gradio_ui.py"]
     volumes:
       - ./src:/app/src

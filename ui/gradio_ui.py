@@ -1,8 +1,14 @@
 import gradio as gr
 import requests
+import os
 
-# Use container service name instead of localhost
-API_URL = "http://churn-fastapi:8080/predict"
+# Switch between 'docker' and 'local' mode
+ENV = os.getenv("ENV_MODE", "local")
+
+if ENV == "docker":
+    url = "http://churn-fastapi:8000/predict"
+else:
+    url = "http://127.0.0.1:8000/predict"
 
 def predict_churn(
     SeniorCitizen: int,
@@ -48,7 +54,7 @@ def predict_churn(
     }]
 
     try:
-        response = requests.post(API_URL, json=payload)
+        response = requests.post(url, json=payload)
         if response.status_code == 200:
             return f"Prediction: {response.json()['predictions'][0]}"
         else:
@@ -89,4 +95,4 @@ gr.Interface(
     title="Customer Churn Predictor",
     description="Enter customer details to predict churn risk",
     allow_flagging="never"
-).launch()
+).launch(server_name="0.0.0.0", server_port=7860)
