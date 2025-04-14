@@ -79,7 +79,7 @@ Think of it as your own AI assistant for customer retention.
 - scikit-learn, pandas, joblib
 - FastAPI, Uvicorn
 - Docker, Docker Compose
-- Azure CLI + Azure Web App for Containers
+- Azure CLI + Azure Container Registry
 - Gradio (UI layer)
 
 ---
